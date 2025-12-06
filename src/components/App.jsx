@@ -16,16 +16,36 @@ function App() {
 
   useEffect(() => {
     localStorage.setItem('review', JSON.stringify(stats));
-  }, [stats, setStats]);
+  }, [stats]);
 
-  let totalFeedback = stats.good + stats.neutral + stats.bad;
+  const totalFeedback = stats.good + stats.neutral + stats.bad;
+  const positiveFeedbackPercentage = totalFeedback > 0 ? Math.round((stats.good / totalFeedback) * 100) : 0;
+
+  const updateFeedback = (feedbackType) => {
+    setStats(prevStats => ({
+      ...prevStats,
+      [feedbackType]: prevStats[feedbackType] + 1,
+    }));
+  };
+
+  const resetFeedback = () => {
+    setStats({
+      good: 0,
+      neutral: 0,
+      bad: 0,
+    });
+  };
 
   return (
     <>
       <Description />
-      <Options stats={stats} setStats={setStats} total={totalFeedback} />
+      <Options updateFeedback={updateFeedback} resetFeedback={resetFeedback} total={totalFeedback} />
 
-      {totalFeedback > 0 ? <Feedback stats={stats} total={totalFeedback} /> : <Notification />}
+      {totalFeedback > 0 ? (
+        <Feedback stats={stats} total={totalFeedback} positiveFeedbackPercentage={positiveFeedbackPercentage} />
+      ) : (
+        <Notification />
+      )}
     </>
   );
 }
