@@ -19,11 +19,12 @@ function App() {
   }, [stats]);
 
   const totalFeedback = stats.good + stats.neutral + stats.bad;
-  
-  const updateFeedback = (type) => {
+  const positiveFeedbackPercentage = totalFeedback > 0 ? Math.round((stats.good / totalFeedback) * 100) : 0;
+
+  const updateFeedback = (feedbackType) => {
     setStats(prevStats => ({
       ...prevStats,
-      [type]: prevStats[type] + 1,
+      [feedbackType]: prevStats[feedbackType] + 1,
     }));
   };
 
@@ -34,8 +35,6 @@ function App() {
       bad: 0,
     });
   };
-
-  const positiveFeedbackPercentage = totalFeedback > 0 ? Math.round((stats.good / totalFeedback) * 100) : 0;
 
   return (
     <>
